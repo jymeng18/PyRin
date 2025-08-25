@@ -10,8 +10,8 @@ PLAYER_HEIGHT = 50
 PLAYER_COLOR = (255, 0, 0)
 
 # Directions
-LEFT = -1
-RIGHT = 1
+LEFT = "left"
+RIGHT = "right"
 
 # Background
 BACKGROUND_PATH = "2D-Platformer-Game-/assets/Background/Background.png"

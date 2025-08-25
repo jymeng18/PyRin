@@ -15,8 +15,12 @@ class Player(pygame.sprite.Sprite):
         self.animation_count = 0
         self.color = PLAYER_COLOR
         self.gravity_count = 0
-        self.sprite_dict = sprites
+        self.sprite_dict = sprites 
         self.sprite = None
+        
+        # Animation state management
+        self.animation_state = "idle" # Default is idle
+        self.animation_speed = 8
     
     def move(self, dx, dy):
         # Move player by x or y amount of distance 
@@ -40,20 +44,49 @@ class Player(pygame.sprite.Sprite):
     def stop_horizontal_movement(self):
         # Stop horizontal movement
         self.x_speed = 0
+        
+    def update_animation_state(self):
+        if self.x_speed != 0:
+            self.animation_state = "run"
+        elif self.y_speed < 0:
+            self.animation_state = "jump"
+        elif self.y_speed > 0:
+            self.animation_state = "fall"
+        else:
+            self.animation_state = "idle"
     
     def update(self, fps):
         self.y_speed += min(1, (self.gravity_count / fps) * self.GRAVITY)
         self.move(self.x_speed, self.y_speed)
+        
+        self.update_animation_state()
         self.animation_count += 1 # TEMPORARY WORK IN PROGRESS
         #self.gravity_count += 1
     
-    def draw(self, surface):
-        # Draw player on screen for every frame
+    def update_animation_sprite(self):
         if self.direction == LEFT:
-            self.sprite = self.sprite_dict["idle_left"][0]
+            direction_suffix = "_left"
         else:
-            self.sprite = self.sprite_dict["idle_right"][0]
+            direction_suffix = "_right"
+        
+        # Form the sprites key in the dict.
+        sprite_key = self.animation_state + direction_suffix
+        
+        # Check if there exists matching key value pairs, and that the sprite animations exist
+        if sprite_key in self.sprite_dict and len(self.sprite_dict[sprite_key]) > 0:
+            sprite_list = self.sprite_dict[sprite_key]
+             
+            # Calculate current frame for animation
+            frame_index = ((self.animation_count // self.animation_speed) % len(sprite_list))
+             
+            # For each frame, pick out our sprite
+            self.sprite = sprite_list[frame_index]
+            self.animation_count += 1
+    
+    def draw(self, surface):
+        self.update_animation_sprite()
         surface.blit(self.sprite, (self.rect.x, self.rect.y))
+        
     
     def get_position(self):
         return (self.rect.x, self.rect.y)

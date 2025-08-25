@@ -14,7 +14,7 @@ class Game:
         
         # Create game objects
         self.level = Level()
-        self.player_sprites = self.level.load_sprite_sheets("MainCharacters", "MaskDude", width=32, height=32, need_flip=True)
+        self.player_sprites = self.level.load_sprite_sheets("MainCharacters", "VirtualGuy", width=32, height=32, need_flip=True)
         self.player = Player(100, 100, PLAYER_WIDTH, PLAYER_HEIGHT, self.player_sprites) # TEMPORARY
         
     def run(self):
@@ -29,6 +29,9 @@ class Game:
             # Update player position if input exists
             self.level.handle_input(self.player)
             self.player.update(FPS)
+            
+            # Update animation state
+                
             
             # Draw onto screen
             self.level.draw_background(self.screen)

@@ -69,6 +69,7 @@ class Level:
             sprites = self.extract_sprites_from_sheet(sprite_sheet, width, height)
                 
             if(need_flip):
+                # Note: Not changing file name, we are just creating a key
                 all_sprites[sprite.replace(".png", "") + "_right"] = sprites
                 all_sprites[sprite.replace(".png", "") + "_left"] = self.flip_sprite_horizontal(sprites)
             else:
