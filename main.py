@@ -13,8 +13,9 @@ class Game:
         self.clock = pygame.time.Clock()
         
         # Create game objects
-        self.player = Player(100, 100, PLAYER_WIDTH, PLAYER_HEIGHT) # TEMPORARY
         self.level = Level()
+        self.player_sprites = self.level.load_sprite_sheets("MainCharacters", "MaskDude", width=32, height=32, need_flip=True)
+        self.player = Player(100, 100, PLAYER_WIDTH, PLAYER_HEIGHT, self.player_sprites) # TEMPORARY
         
     def run(self):
         # Main game loop

@@ -77,25 +77,36 @@ class Level:
         return all_sprites
     
     # Helper method to extract individual sprites frokm a spritesheet
-    def extract_sprites_from_sheet(self, sprite_sheet, width, height):
+    def extract_sprites_from_sheet(self, sprite_sheet, width, height, start_pos = (0, 0)):
+        
         sprites = []
+        
+        # Initialize sprite sheet dimensions
         sheet_width = sprite_sheet.get_width()
+        sheet_height = sprite_sheet.get_height()
         
-        # Calculate how many sprites are in the sheet 
-        num_sprites = sheet_width // width
+        # Default at (0, 0)
+        sprite_rect_x, sprite_rect_y = start_pos
         
-        for i in range(num_sprites):
-            # Create a surface for sprite
-            sprite_surface = pygame.Surface((width, height), pygame.SRCALPHA, 32)
-            
-            # Define the area to copy from the sheet
-            source_rect = pygame.Rect(i * width, 0, width, height)
-            
-            # Copy this sprite from the sheet
-            sprite_surface.blit(sprite_sheet, (0, 0), source_rect)
-            
-            # Scale sprite and add to list
-            scaled_sprite = pygame.transform.scale2x(sprite_surface)
-            sprites.append(scaled_sprite)
+        # Loop through each row, column and 'frame' each target sprite, 
+        # copy it to a subsurface with exact width and height of target sprite
         
+        for row in range(0,  sheet_height - height + 1, height):
+            for col in range(0, sheet_width - width + 1, width):
+                
+                # Set clip region for target sprite
+                sprite_sheet.set_clip(pygame.Rect(sprite_rect_x, sprite_rect_y, width, height))
+                
+                # Extract the sprite using a subsurface
+                sprite = sprite_sheet.subsurface(sprite_sheet.get_clip())
+                
+                # Scale sprite to match current behaviour
+                sprite = pygame.transform.scale2x(sprite)
+                sprites.append(sprite)
+                
+                sprite_rect_x += width
+                
+            sprite_rect_y += height
+            sprite_rect_x = start_pos[0] # Reset starting position after each row
+            
         return sprites

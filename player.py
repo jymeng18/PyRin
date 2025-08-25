@@ -5,7 +5,7 @@ class Player(pygame.sprite.Sprite):
     
     GRAVITY = 1
     
-    def __init__(self, x, y, width, height):
+    def __init__(self, x, y, width, height, sprites):
         super().__init__()
         self.rect = pygame.Rect(x, y, width, height)
         self.x_speed = 0
@@ -15,7 +15,8 @@ class Player(pygame.sprite.Sprite):
         self.animation_count = 0
         self.color = PLAYER_COLOR
         self.gravity_count = 0
-        
+        self.sprite_dict = sprites
+        self.sprite = None
     
     def move(self, dx, dy):
         # Move player by x or y amount of distance 
@@ -44,11 +45,15 @@ class Player(pygame.sprite.Sprite):
         self.y_speed += min(1, (self.gravity_count / fps) * self.GRAVITY)
         self.move(self.x_speed, self.y_speed)
         self.animation_count += 1 # TEMPORARY WORK IN PROGRESS
-        self.gravity_count += 1
+        #self.gravity_count += 1
     
     def draw(self, surface):
         # Draw player on screen for every frame
-        pygame.draw.rect(surface, self.color, self.rect)
+        if self.direction == LEFT:
+            self.sprite = self.sprite_dict["idle_left"][0]
+        else:
+            self.sprite = self.sprite_dict["idle_right"][0]
+        surface.blit(self.sprite, (self.rect.x, self.rect.y))
     
     def get_position(self):
         return (self.rect.x, self.rect.y)
