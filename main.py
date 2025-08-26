@@ -3,7 +3,7 @@ import sys
 from settings import *
 from player import Player
 from level import Level
-from objects import GameObject
+from objects import *
 
 class Game:
     def __init__(self):
@@ -33,7 +33,10 @@ class Game:
             
             # Draw onto screen
             self.level.draw_background(self.screen)
+            self.level.draw_platforms(self.screen)
             self.player.draw(self.screen)
+            
+            # Draw game objects
             
             pygame.display.update()
             self.clock.tick(FPS)

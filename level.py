@@ -1,12 +1,15 @@
 import pygame
 from settings import *
+from objects import *
 from os import listdir
 from os.path import isfile, join
 
 class Level:
     def __init__(self):
         self.background_image = None
+        self.platforms = []
         self.load_background()
+        self.create_platforms()
     
     def load_background(self):
         # Load background img
@@ -17,6 +20,20 @@ class Level:
             # Create fallback background if image fails to load
             self.background_image = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
             self.background_image.fill((135, 206, 235))  # Sky blue
+            
+    # Create platforms by calling platform class methods
+    def create_platforms(self):
+        platform_positions = [
+            (0, SCREEN_HEIGHT - 96),
+        ]
+            
+        for x, y in platform_positions:
+            platform = Platform(x, y, 45, 64)
+            self.platforms.append(platform)
+            
+    def draw_platforms(self, surface):
+        for platform in self.platforms:
+            platform.draw_obj(surface)
             
     # Handle game input
     def handle_input(self, player):
