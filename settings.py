@@ -1,6 +1,6 @@
 # Screen settings
-SCREEN_WIDTH = 1000
-SCREEN_HEIGHT = 800
+SCREEN_WIDTH = 1280
+SCREEN_HEIGHT = 720
 FPS = 60
 
 # Player settings
@@ -23,3 +23,4 @@ BACKGROUND_PATH = ["2D-Platformer-Game-/assets/Background/spooky1.png",
 PLATFORM_WIDTH = 80
 PLATFORM_HEIGHT = 31
 GROUND_LEVEL = 630
+PLAYER_SPAWN = GROUND_LEVEL - 88

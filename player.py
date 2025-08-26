@@ -1,26 +1,110 @@
 import pygame
 from settings import *
+from os import listdir
+from os.path import isfile, join
+
 
 class Player(pygame.sprite.Sprite):
     
     GRAVITY = 1
     
-    def __init__(self, x, y, width, height, sprites):
+    def __init__(self, x, y):
         super().__init__()
-        self.rect = pygame.Rect(x, y, width, height)
+        self.rect = pygame.Rect(x, y, PLAYER_WIDTH, PLAYER_HEIGHT)
         self.x_speed = 0
         self.y_speed = 0
         self.mask = None
         self.direction = LEFT  # -1 for left, 1 for right
         self.animation_count = 0
-        self.color = PLAYER_COLOR
         self.gravity_count = 0
-        self.sprite_dict = sprites 
-        self.sprite = None
         
         # Animation state management
         self.animation_state = "idle" # Default is idle
-        self.animation_speed = 8
+        self.animation_speed = 10
+    
+        # Load sprites
+        self.sprite_dict = self.load_player_sprites()
+        self.sprite = None
+        
+    def load_player_sprites(self):
+        return self.load_player_sprite_sheets('MainCharacters', 'Explorer', width=32, height=32, need_flip=True)
+    
+    # Load our sprites from spritesheet, *folders allows infinite many arbitrary arguments
+    # We use *folders as we have many directories for our assets
+    def load_player_sprite_sheets(self, *folders, width, height, need_flip = False):
+        sprite_img_files = []
+        
+        # Build full path to assets folder
+        assets_path = join('2D-Platformer-Game-/assets', *folders)
+        
+        # Loops through every file in the target folder
+        for file_name in listdir(assets_path):
+            full_path = join(assets_path, file_name)
+            # Error check
+            if(isfile(full_path)):
+                sprite_img_files.append(file_name)
+        
+        # Use dictionary for key value pairs for each file name and sprite
+        all_sprites = {}  
+        
+        for sprite in sprite_img_files:
+            # Load our sprite sheet 
+            sprite_sheet = pygame.image.load(join(assets_path, sprite)).convert_alpha()
+
+            sprites = self.extract_sprites_from_sheet(sprite_sheet, width, height)
+                
+            if(need_flip):
+                # Note: Not changing file name, we are just creating a key
+                all_sprites[sprite.replace(".png", "") + "_right"] = sprites
+                all_sprites[sprite.replace(".png", "") + "_left"] = self.flip_sprite_horizontal(sprites)
+            else:
+                all_sprites[sprite.replace(".png", "")] = sprites
+                
+        return all_sprites
+    
+    # Helper method to extract individual sprites frokm a spritesheet
+    def extract_sprites_from_sheet(self, sprite_sheet, width, height, start_pos = (0, 0)):
+        
+        sprites = []
+        
+        # Initialize sprite sheet dimensions
+        sheet_width = sprite_sheet.get_width()
+        sheet_height = sprite_sheet.get_height()
+        
+        # Default at (0, 0)
+        sprite_rect_x, sprite_rect_y = start_pos
+        
+        # Loop through each row, column and 'frame' each target sprite, 
+        # copy it to a subsurface with exact width and height of target sprite
+        
+        for row in range(0,  sheet_height - height + 1, height):
+            for col in range(0, sheet_width - width + 1, width):
+                
+                # Set clip region for target sprite
+                sprite_sheet.set_clip(pygame.Rect(sprite_rect_x, sprite_rect_y, width, height))
+                
+                # Extract the sprite using a subsurface
+                sprite = sprite_sheet.subsurface(sprite_sheet.get_clip())
+                
+                # Scale sprite to match current behaviour
+                sprite = pygame.transform.scale2x(sprite)
+                sprites.append(sprite)
+                
+                sprite_rect_x += width
+                
+            sprite_rect_y += height
+            sprite_rect_x = start_pos[0] # Reset starting position after each row
+            
+        return sprites
+    
+    # Flip a sprite horizontally 
+    def flip_sprite_horizontal(self, sprites):
+        flipped_sprites = []
+        
+        # Loop through each sprite frame in the spritesheet, flip them horizontally
+        for sprite in sprites:
+            flipped_sprites.append(pygame.transform.flip(sprite, True, False))
+        return flipped_sprites
     
     def move(self, dx, dy):
         # Move player by x or y amount of distance 
@@ -55,15 +139,6 @@ class Player(pygame.sprite.Sprite):
         else:
             self.animation_state = "idle"
     
-    def update(self, fps):
-        self.y_speed += min(1, (self.gravity_count / fps) * self.GRAVITY)
-        self.move(self.x_speed, self.y_speed)
-        
-        self.update_animation_state()
-        
-        self.animation_count += 1 # TEMPORARY WORK IN PROGRESS
-        #self.gravity_count += 1
-    
     def update_animation_sprite(self):
         if self.direction == LEFT:
             direction_suffix = "_left"
@@ -88,17 +163,21 @@ class Player(pygame.sprite.Sprite):
         # Update player's sprite rect
         self.rect = self.sprite.get_rect(topleft = (self.rect.x, self.rect.y))
         self.mask = pygame.mask.from_surface(self.sprite)
-    
-    def draw(self, surface):
+        
+    def update(self, fps):
+        self.y_speed += min(1, (self.gravity_count / fps) * self.GRAVITY)
+        self.move(self.x_speed, self.y_speed)
+        
+        self.update_animation_state()
         self.update_animation_sprite()
         self.update_sprite_rect()
-        surface.blit(self.sprite, (self.rect.x, self.rect.y))
         
-                
-        
+        self.animation_count += 1 # TEMPORARY WORK IN PROGRESS
+        #self.gravity_count += 1
     
-    def get_position(self):
-        return (self.rect.x, self.rect.y)
-    
-    def get_rect(self):
-        return self.rect
+    def draw(self, surface):
+        if self.sprite:
+            surface.blit(self.sprite, (self.rect.x, self.rect.y))
+        else:
+            pygame.draw.rect(surface, (100, 100, 100), self.rect)
+   
