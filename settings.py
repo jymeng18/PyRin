@@ -14,4 +14,12 @@ LEFT = "left"
 RIGHT = "right"
 
 # Background
-BACKGROUND_PATH = "2D-Platformer-Game-/assets/Background/Background.png"
+BACKGROUND_PATH = ["2D-Platformer-Game-/assets/Background/spooky1.png",
+                   "2D-Platformer-Game-/assets/Background/spooky2.png",
+                   "2D-Platformer-Game-/assets/Background/spooky3.png",
+                   ]
+
+# Asset dimensions
+PLATFORM_WIDTH = 80
+PLATFORM_HEIGHT = 31
+GROUND_LEVEL = 630

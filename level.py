@@ -8,28 +8,49 @@ class Level:
     def __init__(self):
         self.background_image = None
         self.platforms = []
-        self.load_background()
-        self.create_platforms()
+        self.create_platforms_floor()
+        self.fill_ground(GROUND_LEVEL, 64, 64, 'Terrain_dirt')
     
-    def load_background(self):
+    def load_background_layers(self, screen):
         # Load background img
-        try:
-            self.background_image = pygame.image.load(BACKGROUND_PATH).convert_alpha()
-            self.background_image = pygame.transform.smoothscale(self.background_image, (SCREEN_WIDTH, SCREEN_HEIGHT))
-        except:
-            # Create fallback background if image fails to load
-            self.background_image = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
-            self.background_image.fill((135, 206, 235))  # Sky blue
+        for bg_img in BACKGROUND_PATH:
+            try:
+                self.background_image = pygame.image.load(bg_img).convert_alpha()
+                self.background_image = pygame.transform.smoothscale(self.background_image, (SCREEN_WIDTH, SCREEN_HEIGHT))
+                self.draw_background(screen)
+            except:
+                # Create fallback background if image fails to load
+                self.background_image = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+                self.background_image.fill((135, 206, 235))  # Sky blue
+            
             
     # Create platforms by calling platform class methods
-    def create_platforms(self):
-        platform_positions = [
-            (0, SCREEN_HEIGHT - 96),
-        ]
+    def create_platforms_floor(self):
+        for i in range(0, SCREEN_WIDTH // PLATFORM_WIDTH + 1):
             
-        for x, y in platform_positions:
-            platform = Platform(x, y, 45, 64)
+            # 48, 64 represent the width and height of the sprite on the spritesheet
+            platform = Platform(i * PLATFORM_WIDTH, 600, PLATFORM_WIDTH, PLATFORM_HEIGHT, 'Terrain2')
             self.platforms.append(platform)
+            
+    def fill_ground(self, ground_level, tile_width, tile_height, ground_tile=None):
+    
+        # Calculate how many tiles we need horizontally and vertically
+        tiles_horizontal = (SCREEN_WIDTH // tile_width) + 1  # +1 to ensure full coverage
+        tiles_vertical = ((SCREEN_HEIGHT - ground_level) // tile_height) + 1
+        
+        # Create ground tiles
+        for row in range(tiles_vertical):
+            for col in range(tiles_horizontal):
+                # Calculate tile position
+                x = col * tile_width
+                y = ground_level + (row * tile_height)
+                
+                # Only create tile if it's within screen bounds
+                if y < SCREEN_HEIGHT:
+                    # Create a ground tile (you could make a GroundTile class or reuse Platform)
+                    ground_tile_obj = Platform(x, y, tile_width, tile_height, ground_tile)
+                    self.platforms.append(ground_tile_obj)
+            
             
     def draw_platforms(self, surface):
         for platform in self.platforms:

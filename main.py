@@ -15,8 +15,8 @@ class Game:
         
         # Create game objects
         self.level = Level()
-        self.player_sprites = self.level.load_sprite_sheets("MainCharacters", "VirtualGuy", width=32, height=32, need_flip=True)
-        self.player = Player(100, 100, PLAYER_WIDTH, PLAYER_HEIGHT, self.player_sprites) # TEMPORARY
+        self.player_sprites = self.level.load_sprite_sheets("MainCharacters", "Explorer", width=32, height=32, need_flip=True)
+        self.player = Player(SCREEN_HEIGHT // 2, GROUND_LEVEL - 88, PLAYER_WIDTH, PLAYER_HEIGHT, self.player_sprites) 
 
     def run(self):
         # Main game loop
@@ -32,7 +32,7 @@ class Game:
             self.player.update(FPS)    
             
             # Draw onto screen
-            self.level.draw_background(self.screen)
+            self.level.load_background_layers(self.screen)
             self.level.draw_platforms(self.screen)
             self.player.draw(self.screen)
             
