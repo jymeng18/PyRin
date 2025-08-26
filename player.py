@@ -129,6 +129,14 @@ class Player(pygame.sprite.Sprite):
         # Stop horizontal movement
         self.x_speed = 0
         
+    def landed(self):
+        self.y_speed = 0
+        self.gravity_count = 0 # Reset gravity count
+    
+    def hit_head(self):
+        self.y_speed *= -1
+        self.animation_count = 0
+        
     def update_animation_state(self):
         if self.x_speed != 0:
             self.animation_state = "run"
@@ -173,7 +181,10 @@ class Player(pygame.sprite.Sprite):
         self.update_sprite_rect()
         
         self.animation_count += 1 # TEMPORARY WORK IN PROGRESS
-        #self.gravity_count += 1
+        self.gravity_count += 1
+    
+    def get_vertical_speed(self):
+        return self.y_speed
     
     def draw(self, surface):
         if self.sprite:

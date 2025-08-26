@@ -43,6 +43,9 @@ class Level:
         for platform in self.platforms:
             platform.draw_obj(surface)
             
+    def get_platforms(self):
+        return self.platforms
+            
     def update(self):
         pass
 

@@ -18,7 +18,7 @@ class GameObject(pygame.sprite.Sprite):
             
             # Scale to match object dimensions
             if scale:
-                image = pygame.transform.scale(image, (self.width * 3, self.height * 3))
+                image = pygame.transform.smoothscale(image, (self.width * 3, self.height * 3))
             
             return image
             

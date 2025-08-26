@@ -5,6 +5,7 @@ from player import Player
 from level import Level
 from objects import *
 from renderer import Renderer
+from collision import Collision
 
 class Game:
     def __init__(self):
@@ -18,7 +19,8 @@ class Game:
         # Create game objects
         self.renderer = Renderer(self.screen)
         self.level = Level()
-        self.player = Player(SCREEN_WIDTH // 2, PLAYER_SPAWN) 
+        self.player = Player(SCREEN_WIDTH // 2, PLAYER_SPAWN - 100)
+        self.collision = Collision() 
 
     # Handle user input
     def handle_input(self):
@@ -32,6 +34,13 @@ class Game:
             self.player.move_left(PLAYER_SPEED)
         if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
             self.player.move_right(PLAYER_SPEED)
+            
+    # Handle collision 
+    def handle_collision(self):
+        # Get our objects that are on the map
+        objects = self.level.get_platforms()
+        dy = self.player.get_vertical_speed()
+        self.collision.check_collision_vertical(self.player, objects, dy)
     
     # Updates player animations and movements
     def update(self):
@@ -52,8 +61,9 @@ class Game:
                     self.running = False
 
             self.handle_input()
-            self.update()
             self.draw()
+            self.update()
+            self.handle_collision()
             pygame.display.update()
             self.clock.tick(FPS)
 
