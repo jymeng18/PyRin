@@ -60,6 +60,7 @@ class Player(pygame.sprite.Sprite):
         self.move(self.x_speed, self.y_speed)
         
         self.update_animation_state()
+        
         self.animation_count += 1 # TEMPORARY WORK IN PROGRESS
         #self.gravity_count += 1
     
@@ -82,10 +83,18 @@ class Player(pygame.sprite.Sprite):
             # For each frame, pick out our sprite
             self.sprite = sprite_list[frame_index]
             self.animation_count += 1
+            
+    def update_sprite_rect(self):
+        # Update player's sprite rect
+        self.rect = self.sprite.get_rect(topleft = (self.rect.x, self.rect.y))
+        self.mask = pygame.mask.from_surface(self.sprite)
     
     def draw(self, surface):
         self.update_animation_sprite()
+        self.update_sprite_rect()
         surface.blit(self.sprite, (self.rect.x, self.rect.y))
+        
+                
         
     
     def get_position(self):
