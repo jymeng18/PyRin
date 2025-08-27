@@ -17,6 +17,7 @@ class Player(pygame.sprite.Sprite):
         self.direction = LEFT  # -1 for left, 1 for right
         self.animation_count = 0
         self.gravity_count = 0
+        self.jump_count = 0
         
         # Animation state management
         self.animation_state = "idle" # Default is idle
@@ -124,6 +125,9 @@ class Player(pygame.sprite.Sprite):
         if self.direction != RIGHT:
             self.direction = RIGHT
             self.animation_count = 0
+            
+    def jump(self):
+        self.y_speed = -1
     
     def stop_horizontal_movement(self):
         # Stop horizontal movement

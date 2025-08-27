@@ -37,10 +37,7 @@ class Game:
             
     # Handle collision 
     def handle_collision(self):
-        # Get our objects that are on the map
-        objects = self.level.get_platforms()
-        dy = self.player.get_vertical_speed()
-        self.collision.check_collision_vertical(self.player, objects, dy)
+        self.collision.check_all_collisions(self.player, self.level)
     
     # Updates player animations and movements
     def update(self):
