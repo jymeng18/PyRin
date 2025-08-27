@@ -8,6 +8,7 @@ PLAYER_SPEED = 5
 PLAYER_WIDTH = 50
 PLAYER_HEIGHT = 50
 PLAYER_COLOR = (255, 0, 0)
+MAX_JUMPS = 2
 
 # Directions
 LEFT = "left"

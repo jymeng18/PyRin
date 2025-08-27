@@ -23,7 +23,12 @@ class Game:
         self.collision = Collision() 
 
     # Handle user input
-    def handle_input(self):
+    def handle_input(self, events):
+        for event in events:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE or event.key == pygame.K_UP:
+                    self.player.jump()
+        
         keys = pygame.key.get_pressed()
         
         # Reset horizontal movement for each frame
@@ -51,13 +56,14 @@ class Game:
     # Main game event loop
     def run(self):
         while self.running:
+            events = []
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
                     self.running = False
-
-            self.handle_input()
+                events.append(event)
+            self.handle_input(events)
             self.draw()
             self.update()
             self.handle_collision()

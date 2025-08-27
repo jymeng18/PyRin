@@ -18,6 +18,7 @@ class Player(pygame.sprite.Sprite):
         self.animation_count = 0
         self.gravity_count = 0
         self.jump_count = 0
+        self.is_grounded = True # Player is on Ground
         
         # Animation state management
         self.animation_state = "idle" # Default is idle
@@ -127,7 +128,16 @@ class Player(pygame.sprite.Sprite):
             self.animation_count = 0
             
     def jump(self):
-        self.y_speed = -1
+        if self.can_jump():
+            self.y_speed = -8
+            self.jump_count += 1
+            self.gravity_count = 0
+            self.animation_count = 0
+            self.is_grounded = False
+    
+    def can_jump(self):
+        return self.is_grounded or self.jump_count < MAX_JUMPS
+        
     
     def stop_horizontal_movement(self):
         # Stop horizontal movement
@@ -135,7 +145,9 @@ class Player(pygame.sprite.Sprite):
         
     def landed(self):
         self.y_speed = 0
-        self.gravity_count = 0 # Reset gravity count
+        self.jump_count = 0
+        self.is_grounded = True
+        self.gravity_count = 0 # Reset gravity count    
     
     def hit_head(self):
         self.y_speed *= -1
