@@ -40,7 +40,7 @@ class Game:
         if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
             self.player.move_right(PLAYER_SPEED)
             
-    # Handle collision 
+    # Handle collision dddd
     def handle_collision(self):
         self.collision.check_all_collisions(self.player, self.level)
     

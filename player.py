@@ -2,6 +2,7 @@ import pygame
 from settings import *
 from os import listdir
 from os.path import isfile, join
+import time
 
 
 class Player(pygame.sprite.Sprite):
@@ -16,7 +17,7 @@ class Player(pygame.sprite.Sprite):
         self.mask = None
         self.direction = LEFT  # -1 for left, 1 for right
         self.stamina = MAX_STAMINA
-        self.is_tired = False
+        self.is_tired = False 
         self.animation_count = 0
         self.gravity_count = 0
         self.jump_count = 0
@@ -151,20 +152,22 @@ class Player(pygame.sprite.Sprite):
         if self.stamina <= 0:
             self.x_speed = 0
             self.is_tired = True
-            pygame.event.wait(3)
             
     def update_stamina(self):
-        # Player is moving
+        
+        # Player is moving on ground
         if self.x_speed != 0 and self.is_grounded:
             self.stamina -= STAMINA_DRAIN_RATE
             if self.stamina <= 0:
                 self.stamina = 0
                 self.tired()
-            
+                
+        # Player is standing still 
         elif self.x_speed == 0 and self.is_grounded:
             self.stamina += STAMINA_RECOVERY_RATE
             if self.stamina >= MAX_STAMINA:
                 self.stamina = MAX_STAMINA
+            if self.stamina >= MIN_STAMINA:
                 self.is_tired = False
         
     def landed(self):
@@ -223,8 +226,8 @@ class Player(pygame.sprite.Sprite):
         self.update_animation_sprite()
         self.update_sprite_rect()
         
-        self.animation_count += 1 # TEMPORARY WORK IN PROGRESS
         self.gravity_count += 1
+        self.animation_count += 1
     
     def get_vertical_speed(self):
         return self.y_speed
