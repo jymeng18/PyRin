@@ -15,6 +15,8 @@ class Player(pygame.sprite.Sprite):
         self.y_speed = 0
         self.mask = None
         self.direction = LEFT  # -1 for left, 1 for right
+        self.stamina = MAX_STAMINA
+        self.is_tired = False
         self.animation_count = 0
         self.gravity_count = 0
         self.jump_count = 0
@@ -115,33 +117,55 @@ class Player(pygame.sprite.Sprite):
     
     def move_left(self, speed):
         # Set player movement to the left
-        self.x_speed = -speed
-        if self.direction != LEFT:
-            self.direction = LEFT
-            self.animation_count = 0
+        if not self.is_tired:
+            self.x_speed = -speed
+            if self.direction != LEFT:
+                self.direction = LEFT
+                self.animation_count = 0
     
     def move_right(self, speed):
         # Set player movement to right
-        self.x_speed = speed
-        if self.direction != RIGHT:
-            self.direction = RIGHT
-            self.animation_count = 0
+        if not self.is_tired:
+            self.x_speed = speed
+            if self.direction != RIGHT:
+                self.direction = RIGHT
+                self.animation_count = 0
             
     def jump(self):
         if self.can_jump():
-            self.y_speed = -8
+            self.y_speed = -7
             self.jump_count += 1
             self.gravity_count = 0
             self.animation_count = 0
+            self.stamina -= 2
             self.is_grounded = False
     
     def can_jump(self):
-        return self.is_grounded or self.jump_count < MAX_JUMPS
+        return self.is_grounded and not self.is_tired
         
-    
     def stop_horizontal_movement(self):
         # Stop horizontal movement
         self.x_speed = 0
+        
+    def tired(self):
+        if self.stamina <= 0:
+            self.x_speed = 0
+            self.is_tired = True
+            pygame.event.wait(3)
+            
+    def update_stamina(self):
+        # Player is moving
+        if self.x_speed != 0 and self.is_grounded:
+            self.stamina -= STAMINA_DRAIN_RATE
+            if self.stamina <= 0:
+                self.stamina = 0
+                self.tired()
+            
+        elif self.x_speed == 0 and self.is_grounded:
+            self.stamina += STAMINA_RECOVERY_RATE
+            if self.stamina >= MAX_STAMINA:
+                self.stamina = MAX_STAMINA
+                self.is_tired = False
         
     def landed(self):
         self.y_speed = 0
@@ -158,8 +182,10 @@ class Player(pygame.sprite.Sprite):
             self.animation_state = "run"
         elif self.y_speed < 0:
             self.animation_state = "jump"
-        elif self.y_speed > 0:
+        elif self.y_speed > self.GRAVITY * 2:
             self.animation_state = "fall"
+        elif self.is_tired:
+            self.animation_state = "tired"
         else:
             self.animation_state = "idle"
     
@@ -191,6 +217,7 @@ class Player(pygame.sprite.Sprite):
     def update(self, fps):
         self.y_speed += min(1, (self.gravity_count / fps) * self.GRAVITY)
         self.move(self.x_speed, self.y_speed)
+        self.update_stamina()
         
         self.update_animation_state()
         self.update_animation_sprite()
