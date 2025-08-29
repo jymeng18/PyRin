@@ -1,52 +1,44 @@
 import pygame
+import pytmx
 from settings import *
 from objects import *
+from os.path import join
 
 class Level:
     def __init__(self):
-        self.platforms = []
+        self.tmx_data = None
+        self.sprite_group = pygame.sprite.Group()
+        self.collision_objects = []  # Store collision objects
+        self.load_tmx_map()
         self.create_level()
-    
+   
     def create_level(self):
-        # Create level geometry and format
-        self.create_platforms_floor()
-        self.fill_ground(GROUND_LEVEL, 64, 64, 'Terrain_dirt')            
-            
-    # Create platforms by calling platform class methods
-    def create_platforms_floor(self):
-        for i in range(0, SCREEN_WIDTH // PLATFORM_WIDTH + 1):
-            
-            # 48, 64 represent the width and height of the sprite on the spritesheet
-            platform = Platform(i * PLATFORM_WIDTH, 600, PLATFORM_WIDTH, PLATFORM_HEIGHT, 'Terrain2')
-            self.platforms.append(platform)
-            
-    def fill_ground(self, ground_level, tile_width, tile_height, ground_tile=None):
+        self.load_tiles()
+        self.load_collision_objects()
+   
+    def load_tmx_map(self):
+        self.tmx_data = pytmx.load_pygame(join('assets', 'Map', 'map2.tmx'))
+        return self.tmx_data
+   
+    def load_tiles(self):
+        for layer in self.tmx_data.visible_layers:
+            if hasattr(layer, 'data'):
+                for x, y, surf in layer.tiles():
+                    position = (x * TILE_SIZE, y * TILE_SIZE)
+                    tile = GameObject(pos=position, surf=surf, groups=self.sprite_group)
+                    # Don't draw here - let the renderer handle drawing
     
-        # Calculate how many tiles we need horizontally and vertically
-        tiles_horizontal = (SCREEN_WIDTH // tile_width) + 1  # +1 to ensure full coverage
-        tiles_vertical = ((SCREEN_HEIGHT - ground_level) // tile_height) + 1
-        
-        # Create ground tiles
-        for row in range(tiles_vertical):
-            for col in range(tiles_horizontal):
-                # Calculate tile position
-                x = col * tile_width
-                y = ground_level + (row * tile_height)
+    def load_collision_objects(self):
+        for obj in self.tmx_data.objects:
+            if hasattr(obj, 'type'):
+     
+                # Create a simple surface for collision object
+                surf = pygame.Surface((obj.width, obj.height))
+                collision_obj = GameObject(pos=(obj.x, obj.y), surf=surf, groups=[])
+                self.collision_objects.append(collision_obj)
                 
-                # Only create tile if it's within screen bounds
-                if y < SCREEN_HEIGHT:
-                    # Create a ground tile (you could make a GroundTile class or reuse Platform)
-                    ground_tile_obj = Platform(x, y, tile_width, tile_height, ground_tile)
-                    self.platforms.append(ground_tile_obj)
-            
-    def draw_platforms(self, surface):
-        for platform in self.platforms:
-            platform.draw_obj(surface)
-            
-    def get_platforms(self):
-        return self.platforms
-            
-    def update(self):
-        pass
+    def get_collision_objects(self):
+        return self.collision_objects
 
-    
+    def print_data(self):
+        print(self.tmx_data.layernames)

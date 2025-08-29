@@ -2,7 +2,6 @@ import pygame
 from settings import *
 from os import listdir
 from os.path import isfile, join
-import time
 
 
 class Player(pygame.sprite.Sprite):
@@ -40,7 +39,7 @@ class Player(pygame.sprite.Sprite):
         sprite_img_files = []
         
         # Build full path to assets folder
-        assets_path = join('2D-Platformer-Game-/assets', *folders)
+        assets_path = join('assets', *folders)
         
         # Loops through every file in the target folder
         for file_name in listdir(assets_path):
@@ -231,6 +230,9 @@ class Player(pygame.sprite.Sprite):
     
     def get_vertical_speed(self):
         return self.y_speed
+    
+    def get_horizontal_speed(self):
+        return self.x_speed
     
     def draw(self, surface):
         if self.sprite:
