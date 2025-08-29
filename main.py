@@ -19,7 +19,7 @@ class Game:
         # Create game objects
         self.renderer = Renderer(self.screen)
         self.level = Level()
-        self.player = Player(0, 0)
+        self.player = Player(0, 500)
         self.collision = Collision()
 
     # Handle user input

@@ -91,7 +91,7 @@ class Player(pygame.sprite.Sprite):
                 sprite = sprite_sheet.subsurface(sprite_sheet.get_clip())
                 
                 # Scale sprite to match current behaviour
-                sprite = pygame.transform.scale2x(sprite)
+                #sprite = pygame.transform.scale2x(sprite)
                 sprites.append(sprite)
                 
                 sprite_rect_x += width
@@ -133,7 +133,7 @@ class Player(pygame.sprite.Sprite):
             
     def jump(self):
         if self.can_jump():
-            self.y_speed = -7
+            self.y_speed = -5
             self.jump_count += 1
             self.gravity_count = 0
             self.animation_count = 0
