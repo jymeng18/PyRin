@@ -103,6 +103,8 @@ class Player(pygame.sprite.Sprite):
     
     # Flip a sprite horizontally 
     def flip_sprite_horizontal(self, sprites):
+        
+    
         flipped_sprites = []
         
         # Loop through each sprite frame in the spritesheet, flip them horizontally
@@ -220,6 +222,7 @@ class Player(pygame.sprite.Sprite):
         self.y_speed += min(1, (self.gravity_count / fps) * self.GRAVITY)
         self.move(self.x_speed, self.y_speed)
         self.update_stamina()
+        self.check_died()
         
         self.update_animation_state()
         self.update_animation_sprite()
@@ -240,3 +243,7 @@ class Player(pygame.sprite.Sprite):
         else:
             pygame.draw.rect(surface, (100, 100, 100), self.rect)
    
+    def check_died(self):
+        if self.rect.y >= SCREEN_HEIGHT:
+            self.rect.x = 0
+            self.rect.y = 500
