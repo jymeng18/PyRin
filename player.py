@@ -219,17 +219,24 @@ class Player(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.sprite)
         
     def update(self, fps):
+        # Apply gravity
         self.y_speed += min(1, (self.gravity_count / fps) * self.GRAVITY)
-        self.move(self.x_speed, self.y_speed)
+        
+        # Update stamina and check for death
         self.update_stamina()
         self.check_died()
         
+        # Update animations
         self.update_animation_state()
         self.update_animation_sprite()
         self.update_sprite_rect()
         
         self.gravity_count += 1
         self.animation_count += 1
+    
+    def apply_movement(self):
+        """Apply movement - called after collision detection"""
+        self.move(self.x_speed, self.y_speed)
     
     def get_vertical_speed(self):
         return self.y_speed
@@ -244,6 +251,6 @@ class Player(pygame.sprite.Sprite):
             pygame.draw.rect(surface, (100, 100, 100), self.rect)
    
     def check_died(self):
-        if self.rect.y >= SCREEN_HEIGHT:
-            self.rect.x = 0
-            self.rect.y = 500
+        # Death detection is now handled in the main game loop
+        # This method is kept for compatibility but does nothing
+        pass
