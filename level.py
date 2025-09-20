@@ -31,11 +31,16 @@ class Level:
     def load_collision_objects(self):
         for obj in self.tmx_data.objects:
             if hasattr(obj, 'type'):
-     
-                # Create a simple surface for collision object
-                surf = pygame.Surface((obj.width, obj.height))
-                collision_obj = GameObject(pos=(obj.x, obj.y), surf=surf, groups=[])
-                self.collision_objects.append(collision_obj)
+                # Handle polygon objects (like triangular tiles)
+                if hasattr(obj, 'points') and obj.points:
+                    # For polygon objects, create a collision object with the polygon points
+                    collision_obj = PolygonCollisionObject(obj.x, obj.y, obj.points)
+                    self.collision_objects.append(collision_obj)
+                else:
+                    # Create a simple rectangular surface for regular collision objects
+                    surf = pygame.Surface((obj.width, obj.height))
+                    collision_obj = GameObject(pos=(obj.x, obj.y), surf=surf, groups=[])
+                    self.collision_objects.append(collision_obj)
                 
     def get_collision_objects(self):
         return self.collision_objects
