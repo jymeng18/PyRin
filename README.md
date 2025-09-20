@@ -142,10 +142,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Archon_Aspect** - Character sprites from [Midnight Forest](https://archon-aspect.itch.io/midnight-forest) on Itch.io
 - **Open Source Libraries** - pytmx for TMX file support
 
-## 📞 Contact
-
-If you have any questions or suggestions, feel free to reach out!
-
 ---
 
-**Enjoy playing Rin 2D Platformer! 🎮**
+**Enjoy playing Rin's 2D Platformer! 🎮**
