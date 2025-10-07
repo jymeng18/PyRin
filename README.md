@@ -1,4 +1,4 @@
-# 🎮 Rin 2D Platformer
+# PyRin
 
 A beautiful 2D platformer game built with Python and Pygame featuring smooth character movement, advanced collision detection, and a polished user interface.
 
@@ -18,8 +18,8 @@ A beautiful 2D platformer game built with Python and Pygame featuring smooth cha
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/rin-2d-platformer.git
-   cd rin-2d-platformer
+   git clone https://github.com/yourusername/PyRin.git
+   cd PyRin
    ```
 
 2. **Install dependencies**
@@ -50,7 +50,7 @@ A beautiful 2D platformer game built with Python and Pygame featuring smooth cha
 ## 🏗️ Project Structure
 
 ```
-rin-2d-platformer/
+PyRin/
 ├── main.py              # Main game loop and state management
 ├── player.py            # Player character with animations and physics
 ├── level.py             # Level loading and tile management
@@ -65,40 +65,6 @@ rin-2d-platformer/
 │   └── Map/           # Level files and tilesets
 └── README.md          # This file
 ```
-
-## 🔧 Technical Details
-
-### Architecture
-- **Modular Design**: Clean separation of concerns with dedicated modules
-- **State Management**: Proper game state handling (menu, playing, game over)
-- **Object-Oriented**: Well-structured classes for maintainability
-- **Event-Driven**: Responsive event handling system
-
-### Collision System
-- **Rectangular Collision**: Standard AABB collision detection
-- **Polygonal Collision**: Advanced barycentric coordinate system for triangular tiles
-- **Predictive Collision**: Collision detection before movement to prevent overlap
-- **Performance Optimized**: Bounding box checks before expensive calculations
-
-### Animation System
-- **Sprite Sheets**: Efficient sprite loading and management
-- **State-Based Animation**: Different animations for different character states
-- **Direction Handling**: Automatic sprite flipping for left/right movement
-- **Frame Management**: Smooth animation timing and cycling
-
-## 🎨 Assets
-
-### Character Sprites
-- **Explorer Character**: Complete sprite set with multiple animation states
-- **Animation States**: idle, run, jump, fall, tired
-- **Direction Support**: Left and right facing sprites
-- **Credits**: Character sprites by [Archon_Aspect](https://archon-aspect.itch.io/) from [Midnight Forest](https://archon-aspect.itch.io/midnight-forest) on Itch.io
-
-### Level Design
-- **Tiled Integration**: Built with Tiled map editor
-- **Multiple Layers**: Background, tiles, decorations, and collision
-- **Triangular Tiles**: Advanced collision support for complex shapes
-- **Scalable Design**: Easy to add new levels and tilesets
 
 ## 🛠️ Development
 
@@ -116,20 +82,6 @@ rin-2d-platformer/
 1. Modify colors and fonts in `ui.py`
 2. Update button styles and layouts
 3. Add new UI elements as needed
-
-## 🐛 Known Issues
-
-- None currently reported! The game is stable and fully playable.
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
-
-### Development Guidelines
-- Follow the existing code style
-- Add comments for complex logic
-- Test thoroughly before submitting
-- Update documentation as needed
 
 
 ## 🙏 Acknowledgments
