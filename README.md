@@ -1,5 +1,7 @@
 # PyRin
 
+![Intro](assets/Intro/Intro.png)
+
 A simple incomplete 2D platformer game built with Python and Pygame featuring smooth character movement, advanced collision detection, and a polished user interface.
 
 ### Prerequisites
